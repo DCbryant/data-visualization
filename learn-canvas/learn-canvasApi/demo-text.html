@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" style="display:block;border:1px solid #ccc;margin:50px auto;"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas")
+
+        canvas.width = 800
+        canvas.height = 800
+        const context = canvas.getContext('2d')
+
+        context.font = 'bold 40px Arial'
+        context.fillStyle = '#058'
+        context.fillText('微凉晨光里再次遇到你',40,100,200) //maxLength
+
+        context.lineWidth = 2
+        context.strokeStyle = '#233'
+        context.strokeText('hey',40,200)
+
+        const bgImage = new Image()
+        bgImage.src = './imgs/brick.jpg'
+        bgImage.onload = function(){
+            const pattern = context.createPattern(bgImage,'repeat')
+            context.fillStyle = pattern
+            context.fillText('说好的幸福呢',40,300)
+            context.strokeText('说好的幸福呢',40,300)
+        }
+
+        const linearGrid = context.createLinearGradient(0,0,800,0)
+        linearGrid.addColorStop(0.0,'#fff')
+        linearGrid.addColorStop(0.25,'yellow')
+        linearGrid.addColorStop(0.50,'green')
+        linearGrid.addColorStop(0.75,'blue')
+        linearGrid.addColorStop(1.0,'#000')
+        context.fillStyle = linearGrid
+        context.fillText('五光十色五光十色五光十色五光十色',40,400)
+    </script>
+</body>
+</html>

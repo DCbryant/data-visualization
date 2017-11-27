@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+        <canvas id="canvas" style="display:block;border:1px solid #ccc;margin:50px auto;"></canvas>
+        <script>
+            const canvas = document.getElementById("canvas")
+    
+            canvas.width = 800
+            canvas.height = 800
+            const context = canvas.getContext('2d')
+
+            context.lineWidth = 5
+
+            context.save()
+            context.scale(1,1)
+            context.strokeRect(50,50,200,200)
+            context.restore()
+
+            context.save()
+            context.scale(2,2)
+            context.strokeRect(50,50,200,200)
+            context.restore()
+
+            context.save()
+            context.scale(3,3)
+            context.strokeRect(50,50,200,200)
+            context.restore()
+
+            //scale的副作用：scale会同时缩放线宽，坐标以及宽高(本来我只想缩放宽高)
+        </script>
+</body>
+</html>

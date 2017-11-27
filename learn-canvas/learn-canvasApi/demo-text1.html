@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" style="display:block;border:1px solid #ccc;margin:50px auto;"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas")
+
+        canvas.width = 800
+        canvas.height = 800
+        const context = canvas.getContext('2d')
+        // context.font = font-style   normal(default) italic(斜体:跟设计的字体有关) oblique(倾斜字体：将字体倾斜了一个角度) 
+        //                font-variant normal(default) small-caps(英文小写字母才有效,将小写变大写)
+        //                font-weight  lighter normal(default 400) bold(700) bolder
+        //                font-size    20px(default) 2em 150%
+        //                font-family  支持@font-face
+        context.fillStyle = '#058'
+
+        context.font = 'bold 40px Arial'
+        context.fillText('微凉晨光里再次遇到你',40,100) 
+
+        context.font = 'italic bold 40px Arial'
+        context.fillText('微凉晨光里再次遇到你',40,200) 
+
+        context.font = 'oblique bold 40px Arial'
+        context.fillText('微凉晨光里Canvas再次遇到你',40,300) 
+
+        context.font = 'small-caps bold 40px Arial'
+        context.fillText('微凉晨光里Canvas再次遇到你',40,400) 
+    </script>
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        a{
+            text-decoration: none;
+            color: inherit;
+        }
+        .wrapper{
+            width: 1200px;
+            height: 800px;
+            position: relative;
+            margin: 50px auto;
+        }
+
+        #canvas{
+            display:block;
+            border:1px solid #ccc;
+            margin:0 auto;
+        }
+
+        #controller{
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            background-color: rgba(0,85,116,0.7);
+            padding: 5px 20px 25px 20px;
+            border-radius: 10px 10px;
+        }
+
+        #controller h2{
+            color: #fff;
+            font-weight: bold;
+            font-family: serif;
+        }
+
+        #controller #canvasBtn{
+            display: inline-block;
+            background-color: #8b0;
+            color: #fff;
+            font-size: 14px;
+            padding: 5px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            margin: 10px 20px 0 0;
+        }
+
+        #controller #canvasBtn:hover{
+            text-decoration: none;
+            background-color: #7a0;
+        }
+
+        #controller .color-btn{
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 6px;
+            font-size: 14px;
+            margin: 10px 5px 0 0;
+        }
+
+        #whiteBtn{
+            background-color: #fff;
+        }
+
+        #blackBtn{
+            background-color: #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <canvas id="canvas" ></canvas>
+        <div id="controller">
+            <h2>canvas绘图之旅</h2>
+            <a href="#" id="canvasBtn">停止运动</a>
+            <a href="#" class='color-btn' id="whiteBtn">&nbsp;</a>
+            <a href="#" class='color-btn' id="blackBtn">&nbsp;</a>
+        </div>
+    </div>
+    <script>
+        const canvas = document.getElementById("canvas")
+        const canvasBtn = document.getElementById('canvasBtn')
+        const whiteBtn = document.getElementById('whiteBtn')
+        const blackBtn = document.getElementById('blackBtn')
+        canvas.width = 1200
+        canvas.height = 800
+        const context = canvas.getContext('2d')
+
+        const balls = []
+        let isMoving = true 
+        let themeColor = '#fff'
+        for(let i=0;i<100;i++){
+            let R  = Math.floor(Math.random() * 255)
+            let G  = Math.floor(Math.random() * 255)
+            let B  = Math.floor(Math.random() * 255)
+            let radius = Math.random() * 50  + 20 
+            const ball = {
+                color:`rgb(${R},${G},${B})`,
+                radius:radius,
+                x:Math.random() * (canvas.width - 2*radius) + radius,
+                y:Math.random() * (canvas.height - 2*radius) + radius,
+                vx:(Math.random() * 5 + 5) * Math.pow(-1,Math.floor(Math.random()*100)),
+                vy:(Math.random() * 5 + 5) * Math.pow(-1,Math.floor(Math.random()*100)),
+            } 
+            balls[i] = ball
+        }
+
+        setInterval(() => {
+            draw(context)
+            if(isMoving){
+                update(canvas.width,canvas.height)
+            }
+        },50)
+
+        console.log(balls)
+
+        function draw(context){
+            const canvas = context.canvas
+            context.clearRect(0,0,canvas.width,canvas.height)
+            if(themeColor == '#000'){
+                context.fillStyle = '#000'
+                context.fillRect(0,0,canvas.width,canvas.height)
+            }
+            for(let i=0;i<balls.length;i++){
+                context.globalCompositeOperation='xor'
+                context.fillStyle = balls[i].color
+                context.beginPath()
+                context.arc(balls[i].x,balls[i].y,balls[i].radius,0,2*Math.PI)
+                context.closePath()
+                context.fill()
+            }
+        }
+
+        canvasBtn.addEventListener('click',function(e){
+            if(isMoving){
+                isMoving = false
+                this.text = '开始运动'
+            }else{
+                isMoving = true
+                this.text = '停止运动'
+            }
+            return false
+        })
+
+        whiteBtn.addEventListener('click',function(){
+            themeColor = '#fff'
+            return false
+        })
+
+        blackBtn.addEventListener('click',function(){
+            themeColor = '#000'
+            return false
+        })
+
+        function update(w,h){
+            for(let i=0;i<balls.length;i++){
+                balls[i].x += balls[i].vx
+                balls[i].y += balls[i].vy
+
+                if(balls[i].x - balls[i].radius <= 0){
+                    balls[i].vx = -balls[i].vx
+                    balls[i].x = balls[i].radius
+                }
+
+                if(balls[i].x + balls[i].radius >= w){
+                    balls[i].vx = -balls[i].vx
+                    balls[i].x = w - balls[i].radius
+                }
+
+                if(balls[i].y - balls[i].radius <= 0){
+                    balls[i].vy = -balls[i].vy
+                    balls[i].y = balls[i].radius
+                }
+
+                if(balls[i].y + balls[i].radius >= h){
+                    balls[i].vy = -balls[i].vy
+                    balls[i].y = h - balls[i].radius
+                }
+            }
+        }
+
+    </script>
+</body>
+</html>

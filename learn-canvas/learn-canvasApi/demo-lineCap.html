@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" style="display:block;border:1px solid #ccc;margin:50px auto;"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas")
+
+        canvas.width = 800
+        canvas.height = 800
+        const context = canvas.getContext('2d')
+        
+        context.lineWidth = 50
+        context.strokeStyle = '#058'
+
+        context.beginPath()
+        context.moveTo(100,200)
+        context.lineTo(700,200)
+        // lineCap只对起始和开头有作用，对于线段间的衔接没有用
+        context.lineCap = 'butt'
+        context.stroke()
+
+        context.beginPath()
+        context.moveTo(100,400)
+        context.lineTo(700,400)
+        context.lineCap = 'round'
+        context.stroke()
+
+
+        context.beginPath()
+        context.moveTo(100,600)
+        context.lineTo(700,600)
+        context.lineCap = 'square'
+        context.stroke()
+
+
+        // baseline
+        context.lineWidth = 1
+        context.strokeStyle = '#27a'
+        context.moveTo(100,100)
+        context.lineTo(100,700)
+
+        context.moveTo(700,100)
+        context.lineTo(700,700)
+
+        context.stroke()
+    </script>
+</body>
+</html>

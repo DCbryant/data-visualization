@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+        <canvas id="canvas" style="display:block;border:1px solid #ccc;margin:50px auto;"></canvas>
+        <script>
+            const canvas = document.getElementById("canvas")
+    
+            canvas.width = 800
+            canvas.height = 800
+            const context = canvas.getContext('2d')
+
+            context.save() //保存当前的图形状态
+            context.fillStyle = 'red'
+            context.translate(100,100)
+            context.fillRect(0,0,400,400)
+            // context.translate(-100,-100)
+            // 可以逆转解决
+            context.restore() //返回在sava这个节点canvas的所有状态
+
+            context.fillStyle = 'yellow'
+            context.translate(300,300)
+            // 100 + 300 = 400
+            context.fillRect(0,0,400,400)
+            // 图形变换是会累积的
+        </script>
+</body>
+</html>

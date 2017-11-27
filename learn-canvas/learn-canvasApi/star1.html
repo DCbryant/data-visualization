@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" style="display:block;border:1px solid #ccc;margin:50px auto;"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas")
+
+        canvas.width = 800
+        canvas.height = 800
+        const context = canvas.getContext('2d')
+        
+        context.shadowBlur=3
+        context.shadowColor='#058'
+        context.shadowOffsetX=10
+        context.shadowOffsetY=10
+
+        drawStar(context,300,400,400,0)
+
+        function drawStar(context,r,x,y,rot){
+            context.save()
+
+            context.translate(x,y)
+            context.rotate(rot / 180 * Math.PI)
+            context.scale(r,r)
+
+            starPath(context)
+
+            context.fillStyle = '#fb3'
+
+            // 因为scale会影响到线宽，只好放弃设置stroke
+            // context.strokeStyle = '#fd5'
+            // context.lineWidth = 3
+            // context.lineJoin = 'round'
+
+            context.fill()
+            // context.stroke()
+
+            context.restore()
+        }
+
+        // 标准五角星路径
+        function starPath(context){
+            context.beginPath()
+            for(let i=0;i<5;i++){
+                context.lineTo(
+                    Math.cos((18 + i*72)/180*Math.PI),
+                    -Math.sin((18 + i*72)/180*Math.PI),
+                )
+                context.lineTo(
+                    Math.cos((54 + i*72)/180*Math.PI)*0.5,
+                    -Math.sin((54 + i*72)/180*Math.PI)*0.5,
+                )
+            }
+            context.closePath()
+        }
+
+    </script>
+</body>
+</html>

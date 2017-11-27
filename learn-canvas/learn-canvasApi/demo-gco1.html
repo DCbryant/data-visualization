@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #buttons{
+            width: 1200px;
+            margin: 10px auto;
+        }
+        #buttons.clearfix{
+            content: '';
+            display: block;
+            clear: both;
+        }
+        a{  
+            font-size: 18px;
+            display: block;
+            float: left;
+            margin-right: 12px;
+            color: inherit;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" style="display:block;border:1px solid #ccc;margin:50px auto;"></canvas> 
+    <div class="clearfix" id="buttons">
+        <a href="#">source-over</a>
+        <a href="#">source-atop</a>
+        <a href="#">source-in</a>
+        <a href="#">source-out</a>
+        <a href="#">destination-over</a>
+        <a href="#">destination-atop</a>
+        <a href="#">destination-in</a>
+        <a href="#">destination-out</a>
+        <a href="#">xor</a>
+        <a href="#">copy</a>
+        <a href="#">lighter</a>
+    </div>
+    <script>
+        
+        draw('source-over')
+
+        function draw(){
+
+        }
+        const buttons = document.querySelectorAll('a')
+        for(let i=0;i<buttons.length;i++){
+            buttons[i].onclick = function(){
+                draw(this.text)
+                return false
+            }
+        }
+
+        function draw(compositeStyle){
+            const canvas = document.getElementById("canvas")
+            const context = canvas.getContext('2d')
+            canvas.width = 1200
+            canvas.height = 800
+            context.clearRect(0,0,canvas.width,canvas.height)
+
+            context.font = 'bold 40px Arial'
+            context.fillStyle = '#058'
+            context.textAlign = 'center'
+            context.textBaseline = 'middle'
+            context.fillText('globalCompositeOperation = ' + compositeStyle,canvas.width / 2,60)
+
+
+            context.fillStyle = 'blue'
+            context.fillRect(300,150,500,500)
+
+
+            // des:开始画的 src：后开始画的
+            context.globalCompositeOperation=compositeStyle
+            context.fillStyle = 'red'
+            context.beginPath()
+            context.moveTo(700,250)
+            context.lineTo(1000,750)
+            context.lineTo(400,750)
+            context.closePath()
+            context.fill()
+        }
+
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" style="display:block;border:1px solid #ccc;margin:50px auto;"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas")
+
+        canvas.width = 1200
+        canvas.height = 800
+        const context = canvas.getContext('2d')
+        
+        const skyStyle = context.createLinearGradient(0, 0, 0, canvas.height);
+        // const skyStyle = context.createRadialGradient(canvas.width/2, canvas.height, 0, canvas.width/2, canvas.height, canvas.height)
+        skyStyle.addColorStop(0.0,'#000')
+        skyStyle.addColorStop(1.0,'#035')
+        context.fillStyle = skyStyle
+        context.fillRect(0,0,canvas.width,canvas.height)
+
+        for(let i=0;i<200;i++){
+            let r = Math.random()*5 + 5
+            let x = Math.random() * canvas.width
+            let y = Math.random() * canvas.height * 0.65
+            let angel = Math.random() * 360
+            drawStar(context,r,x,y,angel)
+        }
+
+        fillMoon(context,2,900,200,100,30)
+        drawLand(context)
+
+        function drawLand(context){
+            context.save()
+            context.beginPath()
+            context.moveTo(0,600)
+            context.bezierCurveTo(540,400,660,800,1200,600)
+            context.lineTo(1200,800)
+            context.lineTo(0,800)
+            const landStyle = context.createLinearGradient(0, canvas.height,0,0);
+            landStyle.addColorStop(0.0,'#030')
+            landStyle.addColorStop(1.0,'#580')
+            context.fillStyle = landStyle
+            context.fill()
+            context.closePath()
+            context.restore()
+        }
+
+
+        function fillMoon(context,d,x,y,r,rot,fillColor){
+            context.save()
+            context.translate(x,y)
+            context.rotate(rot*Math.PI/180)
+            context.scale(r,r)
+            pathMoon(context,d)
+            context.fillStyle = fillColor || '#fb5'
+            context.fill()
+            context.restore()
+        }
+
+        function pathMoon(conttext,d){
+            context.beginPath()
+            context.arc(0,0,1,0.5*Math.PI,1.5*Math.PI,true)
+            context.moveTo(0,-1)
+            context.arcTo(d,0,0,1,dis(0,-1,d,0)/d)
+            context.closePath()
+        }
+
+        function dis(x1,y1,x2,y2){
+            return Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2))
+        }
+
+        function drawStar(context,r,x,y,rot){
+            context.save()
+
+            context.translate(x,y)
+            context.rotate(rot / 180 * Math.PI)
+            context.scale(r,r)
+
+            starPath(context)
+
+            context.fillStyle = '#fb3'
+
+            // 因为scale会影响到线宽，只好放弃设置stroke
+            // context.strokeStyle = '#fd5'
+            // context.lineWidth = 3
+            // context.lineJoin = 'round'
+
+            context.fill()
+            // context.stroke()
+
+            context.restore()
+        }
+
+        // 标准五角星路径
+        function starPath(context){
+            context.beginPath()
+            for(let i=0;i<5;i++){
+                context.lineTo(
+                    Math.cos((18 + i*72)/180*Math.PI),
+                    -Math.sin((18 + i*72)/180*Math.PI),
+                )
+                context.lineTo(
+                    Math.cos((54 + i*72)/180*Math.PI)*0.5,
+                    -Math.sin((54 + i*72)/180*Math.PI)*0.5,
+                )
+            }
+            context.closePath()
+        }
+
+    </script>
+</body>
+</html>

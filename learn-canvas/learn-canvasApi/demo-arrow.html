@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" style="display:block;border:1px solid #ccc;margin:50px auto;"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas")
+
+        canvas.width = 800
+        canvas.height = 800
+        const context = canvas.getContext('2d')
+        //状态的设置
+        context.moveTo(100,350)
+        context.lineTo(500,350)
+        context.lineTo(500,200)
+        context.lineTo(700,400)
+        context.lineTo(500,600)
+        context.lineTo(500,450)
+        context.lineTo(100,450)
+        // context.lineTo(100,350)
+        context.closePath() //封闭图形
+
+        context.lineWidth = 5
+        context.fillStyle = 'yellow'
+        context.strokeStyle = 'red'
+
+        // 填充色会把描边的颜色覆盖掉，因此要把填充放在描边前面
+        context.fill()
+        context.stroke()
+
+
+    </script>
+</body>
+</html>

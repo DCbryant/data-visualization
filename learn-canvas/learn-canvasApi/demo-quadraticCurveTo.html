@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" style="display:block;border:1px solid #ccc;margin:50px auto;"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas")
+
+        canvas.width = 800
+        canvas.height = 800
+        const context = canvas.getContext('2d')
+        context.moveTo(x0,y0)//起始点
+        context.quadraticCurveTo(cpx, cpy, x, y) //控制点、终点
+
+        context.moveTo(x0,y0)//起始点
+        context.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)//控制点1、控制点2、终点
+        
+    </script>
+</body>
+</html>

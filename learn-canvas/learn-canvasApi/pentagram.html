@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" style="display:block;border:1px solid #ccc;margin:50px auto;"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas")
+
+        canvas.width = 800
+        canvas.height = 800
+        const context = canvas.getContext('2d')
+        
+        // context.beginPath()
+        // for(let i=0;i<5;i++){
+        //     // 外侧大圆顶点
+        //     context.lineTo(
+        //         Math.cos((18 + i*72)/180*Math.PI)*300 + 400,
+        //         -Math.sin((18 + i*72)/180*Math.PI)*300 + 400,
+        //     )
+
+        //     // 内侧小圆顶点
+        //     context.lineTo(
+        //         Math.cos((54 + i*72)/180*Math.PI)*150 + 400,
+        //         -Math.sin((54 + i*72)/180*Math.PI)*150 + 400,
+        //     )
+        // }
+        // context.closePath()
+        // context.lineWidth = 10
+        // context.stroke()
+        
+        drawStar(context,150,300,400,400,30)
+        function drawStar(context,r,R,x,y,rot){
+            context.beginPath()
+            for(let i=0;i<5;i++){
+                // 外侧大圆顶点
+                context.lineTo(
+                    Math.cos((18 + i*72 - rot)/180*Math.PI)*R + x,
+                    -Math.sin((18 + i*72 - rot)/180*Math.PI)*R + y,
+                )
+
+                // 内侧小圆顶点
+                context.lineTo(
+                    Math.cos((54 + i*72 - rot)/180*Math.PI)*r + x,
+                    -Math.sin((54 + i*72 - rot)/180*Math.PI)*r + y,
+                )
+            }
+            context.closePath()
+            context.lineWidth = 10
+            context.lineJoin = 'bevel' //线条相交 default:miter 尖角 round:圆角 bevel：斜接
+            // 当需要图形展现非常尖锐的时候可以修改limit，否则默认10就ok了
+            context.miterLimit = 10 //只有lineJoin为miter的时候有效，当超过limit的时候，miter就会被改为bevel
+            context.stroke()
+        }
+
+    </script>
+</body>
+</html>

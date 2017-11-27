@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" style="display:block;border:1px solid #ccc;margin:50px auto;"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas")
+
+        canvas.width = 800
+        canvas.height = 800
+        const context = canvas.getContext('2d')
+        
+        drawRect(context,100,100,400,400,10,'#05f','#f00')
+        drawRect2(context,300,300,400,400,10,'#05f','#f00')
+
+        function drawRect(ctx,x,y,w,h,borderWidth,borderColor,fillColor){
+            ctx.beginPath()
+            // ctx.moveTo(x,y)
+            // ctx.lineTo(x+w,y)
+            // ctx.lineTo(x+w,y+w)
+            // ctx.lineTo(x,y+h)
+            ctx.rect(x,y,w,h)
+            // ctx.strokeRect(x,y,w,h)
+            // ctx.fillRect(x,y,w,h)
+            ctx.closePath()
+
+            ctx.lineWidth = borderWidth
+            ctx.fillStyle = fillColor
+            ctx.strokeStyle = borderColor
+
+            ctx.fill()
+            ctx.stroke()
+        }
+
+        // 默认的合成模式即是后面的会覆盖前面的
+        function drawRect2(ctx,x,y,w,h,borderWidth,borderColor,fillColor){
+            
+            ctx.lineWidth = borderWidth
+            ctx.fillStyle = fillColor
+            ctx.strokeStyle = borderColor
+
+            ctx.strokeRect(x,y,w,h)
+            ctx.fillRect(x,y,w,h)
+        }
+    </script>
+</body>
+</html>

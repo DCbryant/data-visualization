@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+        <canvas id="canvas" style="display:block;border:1px solid #ccc;margin:50px auto;"></canvas> 
+    <script>
+        const canvas = document.getElementById("canvas")
+        const context = canvas.getContext('2d')
+        canvas.width = 800
+        canvas.height = 800
+        // des:开始画的 src：后开始画的
+        // context.globalCompositeOperation= source-over(default) ：后绘制的压盖在前面绘制的
+        //                                   source-atop
+        //                                   source-in 
+        //                                   source-out 
+        //                                   destination-over：先绘制的盖在后绘制的
+        //                                   destination-atop
+        //                                   destination-in
+        //                                   destination-out
+        //                                   xor
+        //                                   copy ：
+        //                                   lighter
+
+        context.fillStyle = 'blue'
+        context.fillRect(100,200,400,400)
+
+        context.globalCompositeOperation='destination-over';
+        context.fillStyle = 'red'
+        context.beginPath()
+        context.moveTo(400,300)
+        context.lineTo(650,700)
+        context.lineTo(150,700)
+        context.closePath()
+        context.fill()
+        
+    </script>
+</body>
+</html>

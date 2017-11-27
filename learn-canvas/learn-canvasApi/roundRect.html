@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" style="display:block;border:1px solid #ccc;margin:50px auto;"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas")
+
+        canvas.width = 800
+        canvas.height = 800
+        const context = canvas.getContext('2d')
+
+        // drawRoundRect(context,100,100,600,500,50)
+        fillRoundRect(context,150,150,500,500,10,'#bbada0')
+        for(let i=0;i<4;i++){
+            for(let j=0;j<4;j++){
+                fillRoundRect(context,170 + i*120,170 + j*120,100,100,6,'#ccc0b3')
+            }
+        }
+
+        function drawRoundRect(context,x,y,w,h,r){
+            context.save()
+            context.translate(x,y)
+            pathRoundRect(context,w,h,r)
+            context.strokeStyle = '#000'
+            context.stroke()
+            context.restore()
+        }
+
+        function fillRoundRect(context,x,y,w,h,r,fillColor){
+            if(2*r > w || 2*r > h){
+                return;
+            }
+            context.save()
+            context.translate(x,y)
+            pathRoundRect(context,w,h,r)
+            context.fillStyle = fillColor || '#000'
+            context.fill()
+            context.restore()
+        }
+
+        function strokeRoundRect(context,x,y,w,h,r,lineWidth,strokeColor){
+            if(2*r > w || 2*r > h){
+                return;
+            }
+            context.save()
+            context.translate(x,y)
+            pathRoundRect(context,w,h,r)
+            context.lineWidth = lineWidth || 1
+            context.strokeStyle = strokeColor || '#000'
+            context.stroke()
+            context.restore()
+        }
+
+        function pathRoundRect(context,w,h,r){
+            context.beginPath()
+            context.arc(w-r,h-r,r,0,Math.PI/2)
+            context.lineTo(r,h)
+            context.arc(r,h-r,r,Math.PI/2,Math.PI)
+            context.lineTo(0,r)
+            context.arc(r,r,r,Math.PI,Math.PI*3/2)
+            context.lineTo(w-r,0)
+            context.arc(w-r,r,r,Math.PI*3/2,Math.PI*2)
+            context.closePath()
+        }
+    </script>
+</body>
+</html>

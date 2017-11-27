@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" style="display:block;border:1px solid #ccc;margin:50px auto;"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas")
+
+        canvas.width = 800
+        canvas.height = 800
+        const context = canvas.getContext('2d')
+        
+        context.fillStyle = '#058'
+        context.font = 'bold 40px Arial'
+        // context.textBaseLine = top | middle | bottom | alphabetic(default:拉丁字母) | ideographic(中文) | hanging(印度字符)
+
+        context.textBaseline = 'top' //以起始边界为起点
+        context.fillText('微凉晨光里再次遇到你',40,100) 
+        drawBaseLine(context,100)
+
+        context.textBaseline = 'middle' //以起始边界为终点
+        context.fillText('微凉晨光里再次遇到你',40,200) 
+        drawBaseLine(context,200)
+
+        context.textBaseline = 'bottom'
+        context.fillText('微凉晨光里再次遇到你',40,300) 
+        drawBaseLine(context,300)
+
+
+
+        // 默认拉丁字母包括英文
+        context.textBaseline = 'alphabetic'
+        context.fillText('天亮走到天黑 从不觉疲惫abcdefghi',40,400) 
+        drawBaseLine(context,400)
+
+        context.textBaseline = 'ideographic'
+        context.fillText('天亮走到天黑 从不觉疲惫abcdefghi',40,500) 
+        drawBaseLine(context,500)
+
+        context.textBaseline = 'hanging'
+        context.fillText('天亮走到天黑 从不觉疲惫abcdefghi',40,600) 
+        drawBaseLine(context,600)
+
+        // baseline
+        function drawBaseLine(context,h){
+            const width = context.canvas.width
+            context.save()
+            context.strokeStyle = '#888'
+            context.lineWidth = 2
+            context.moveTo(0,h)
+            context.lineTo(width,h)
+            context.stroke()
+            context.restore()
+        }
+    </script>
+</body>
+</html>

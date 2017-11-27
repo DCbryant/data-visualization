@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" style="display:block;border:1px solid #ccc;margin:50px auto;"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas")
+
+        canvas.width = 800
+        canvas.height = 800
+        const context = canvas.getContext('2d')
+
+        context.lineWidth = 5
+        //状态的设置
+        // beginPath + lineTo === moveTo ,因此下面的moveTo可以改为lineTo
+        context.beginPath()
+        context.moveTo(100,200)
+        context.lineTo(300,400)
+        context.lineTo(100,600)
+        context.strokeStyle = 'yellow'
+        context.stroke()
+
+        context.beginPath()
+        context.moveTo(300,200)
+        context.lineTo(500,400)
+        context.lineTo(300,600)
+        context.strokeStyle = 'blue'
+        context.stroke()
+
+        context.beginPath()
+        context.moveTo(500,200)
+        context.lineTo(700,400)
+        context.lineTo(500,600)
+
+        context.strokeStyle = 'red'
+        context.stroke()
+
+        // 此时绘图效果三条折线全都是红色，因为canvas是基于状态绘制的，程序运行第一个stroke会画出黄色折线
+        // 程序运行到第二个stroke会把第一条、第二条折线都绘制一遍，此时它们都为蓝色
+        // 当程序运行到最后的stroke，会把三条折线都绘制一遍，将它们都画成红色，这也是canvas基于状态的原理
+        // 它们绘制的都是同一条路径，所以下面的会把上面的给覆盖掉
+
+        // beginPath可以指定canvas绘制使用新的状态，就可以解决以上问题
+        // beginPath的作用：清空子路径列表开始一个新路径(重新开始一个路径)
+    </script>
+</body>
+</html>

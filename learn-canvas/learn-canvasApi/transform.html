@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" style="display:block;border:1px solid #ccc;margin:50px auto;"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas")
+
+        canvas.width = 800
+        canvas.height = 800
+        const context = canvas.getContext('2d')
+
+        context.fillStyle = 'red'
+        context.strokeStyle = '#058'
+        context.lineWidth = 5
+
+        /*
+            a c e
+            b d f
+            0 0 1
+
+            a、d：水平、垂直缩放
+            b、c：水平、垂直倾斜
+            e、f：水平、垂直位移
+        */
+
+        context.save()
+        context.transform(1,0,0,1,0,0)
+        context.fillRect(50,50,300,300)
+        context.strokeRect(50,50,300,300)
+        context.restore()
+
+        // transform也有负效果，会影响到线宽
+        // tranform也有累积效应
+
+        // 忽略之前的transform
+        context.setTransform(a,b,c,d,e,f)
+    </script>
+</body>
+</html>

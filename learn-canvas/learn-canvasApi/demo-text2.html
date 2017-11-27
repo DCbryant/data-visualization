@@ -1,0 +1,39 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" style="display:block;border:1px solid #ccc;margin:50px auto;"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas")
+
+        canvas.width = 800
+        canvas.height = 800
+        const context = canvas.getContext('2d')
+        
+        context.fillStyle = '#058'
+        context.font = 'bold 40px Arial'
+        // context.textAlign = left | center | right
+
+        context.textAlign = 'left' //以起始边界为起点
+        context.fillText('微凉晨光里再次遇到你',400,100) 
+
+        context.textAlign = 'right' //以起始边界为终点
+        context.fillText('微凉晨光里再次遇到你',400,200) 
+
+        context.textAlign = 'center'
+        context.fillText('微凉晨光里再次遇到你',400,300) 
+
+        // baseline
+        context.strokeStyle = 'red'
+        context.moveTo(400,0)
+        context.lineTo(400,800)
+        context.stroke()
+    </script>
+</body>
+</html>
