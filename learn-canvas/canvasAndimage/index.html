@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .wrapper{
+            margin: 20px auto;
+            width: 1700px;
+        }
+        .wrapper:after{
+            content: '';
+            display: block;
+            clear: both;
+        }
+        canvas{
+            border:1px solid #ccc;
+        }
+        .filter{
+            text-align: center;
+            margin-top: 50px;
+            font-size: 20px;
+        }
+        a{
+            text-decoration: none;
+            color: inherit;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <canvas id="canvasa" width="800" height="560"></canvas>
+    <canvas id="canvasb" width="800" height="560"></canvas>
+</div>
+<div class="filter">
+    <button id="filter" >filter</button>
+</div>
+<script>
+    const canvasa = document.getElementById('canvasa')
+    const contexta = canvasa.getContext('2d')
+
+    const canvasb = document.getElementById('canvasb')
+    const contextb = canvasb.getContext('2d')
+    console.log(contextb)
+    const filterBtn = document.getElementById('filter')
+
+    const image = new Image()
+    image.src = './images/scenery.jpg'
+    image.onload = function(){
+        contexta.drawImage(image,0,0,canvasa.width,canvasa.height)
+    }
+
+
+    filterBtn.addEventListener('click',filter)
+
+    function filter(){
+        const imageData = contexta.getImageData(0,0,canvasa.width,canvasa.height)
+        console.log(imageData)
+        // 这里出现了跨域，在服务器上没问题,本地会跨域
+        contextb.putImageData(imageData,0,0,0,0,contextb.width,contextb.height)
+    }
+</script>
+</body>
+</html>

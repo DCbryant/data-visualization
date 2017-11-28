@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" style="display:block;border:1px solid #ccc;margin:50px auto;"></canvas>
+    <input type="range" id="scale-range" min="0.5" max="3.0" step="0.01" value="1.0" style="display:block;margin:20px auto;width:800px;">
+
+    <canvas id="watermark-canvas" style="display:none;border:1px solid #ccc;margin:0 auto;"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas")
+        const slider = document.getElementById('scale-range')
+        let scale = slider.value
+
+        const watermarkCanvas = document.getElementById('watermark-canvas')
+        const wmContext = watermarkCanvas.getContext('2d')
+
+        canvas.width = 1024
+        canvas.height = 768
+        const context = canvas.getContext('2d')
+        const image = new Image()
+        image.src = './images/saber-l.jpg'
+        image.onload = function(){
+            drawImageByScale(scale)
+            slider.onmousemove = function(){
+                scale = this.value
+                drawImageByScale(scale)
+            }
+        }
+
+        wmContext.width = 600
+        wmContext.height = 100
+
+        wmContext.font = 'bold 50px Arial'
+        wmContext.lineWidth  = '1'
+        wmContext.fillStyle = 'rgba(126,66,66,0.8)'
+        wmContext.textBaseline = 'middle'
+        wmContext.fillText('dcbryant',26,80)
+
+
+        function drawImageByScale(scale){
+            let imageWidth = 1024*scale
+            let imageHeight = 768*scale
+
+            let dx = canvas.width / 2 - imageWidth / 2 
+            let dy = canvas.height / 2 - imageHeight / 2
+            context.clearRect(0,0,canvas.width,canvas.height)
+            context.drawImage(image,dx,dy,imageWidth,imageHeight)
+            context.drawImage(watermarkCanvas,canvas.width-watermarkCanvas.width,canvas.height-watermarkCanvas.height)
+        }
+    </script>    
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .wrapper{
+            margin: 20px auto;
+            width: 1700px;
+        }
+        .wrapper:after{
+            content: '';
+            display: block;
+            clear: both;
+        }
+        canvas{
+            border:1px solid #ccc;
+        }
+        .filter{
+            text-align: center;
+            margin-top: 50px;
+            font-size: 20px;
+        }
+        a{
+            text-decoration: none;
+            color: inherit;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <canvas id="canvasa" width="800" height="560"></canvas>
+        <canvas id="canvasb" width="800" height="560"></canvas>
+    </div>
+    <div class="filter">
+        <button id="fadeToGreyBtn" >greyEffect</button>
+        <button id="fadeToWBBtn" >wbEffect</button>
+        <button id="fadeToReverseBtn" >reverseEffect</button>
+        <button id="fadeToBlurBtn" >blurEffect</button>
+        <button id="fadeToMosaicBtn" >mosaicEffect</button>
+    </div>
+    <script>
+        const canvasa = document.getElementById('canvasa')
+        const contexta = canvasa.getContext('2d')
+
+        const canvasb = document.getElementById('canvasb')
+        const contextb = canvasb.getContext('2d')
+        const fadeToGreyBtn = document.getElementById('fadeToGreyBtn')
+        const fadeToWBBtn = document.getElementById('fadeToWBBtn')
+        const fadeToReverseBtn = document.getElementById('fadeToReverseBtn')
+        const fadeToBlurBtn = document.getElementById('fadeToBlurBtn')
+        const fadeToMosaicBtn = document.getElementById('fadeToMosaicBtn')
+
+        const image = new Image()
+        image.src = './images/scenery.jpg'
+        image.onload = function(){
+            contexta.drawImage(image,0,0,canvasa.width,canvasa.height)
+        }
+
+
+        fadeToGreyBtn.addEventListener('click',greyEffect)
+        fadeToWBBtn.addEventListener('click',wbEffect)
+        fadeToReverseBtn.addEventListener('click',reverseEffect)
+        fadeToBlurBtn.addEventListener('click',blurEffect)
+        fadeToMosaicBtn.addEventListener('click',mosaicEffect)
+        //灰度滤镜
+        function greyEffect(){
+            let imageData = contexta.getImageData(0,0,canvasa.width,canvasa.height)
+            // 这里出现了跨域，在服务器上没问题,本地会跨域
+            let  pixelData = imageData.data
+            // 每一个像素的data都包含了rgba四个通道的值
+            // 第i个像素 r -> pixelData[4*i+0] ----> gba
+            // 第x行第y列 i = x*width + y   r -> pixelData[4*i+0]
+
+            for(let i=0;i<canvasb.width * canvasb.height;i++){
+                let r = pixelData[4*i+0]
+                let g = pixelData[4*i+0]
+                let b = pixelData[4*i+0]
+
+                let grey = r*0.3+g*0.59+b*0.11
+                pixelData[4*i+0] = grey
+                pixelData[4*i+1] = grey
+                pixelData[4*i+2] = grey
+            }
+
+            contextb.putImageData(imageData,0,0,0,0,canvasb.width,canvasb.height)
+        }
+
+        // 灰白滤镜
+        function  wbEffect() {
+            let imageData = contexta.getImageData(0,0,canvasa.width,canvasa.height)
+            let  pixelData = imageData.data
+            for(let i=0;i<canvasb.width * canvasb.height;i++){
+                let r = pixelData[4*i+0]
+                let g = pixelData[4*i+0]
+                let b = pixelData[4*i+0]
+                let v
+
+                let grey = r*0.3+g*0.59+b*0.11
+
+                if(grey > 255/2){
+                    v = 255
+                }else{
+                    v = 0
+                }
+                pixelData[4*i+0] = v
+                pixelData[4*i+1] = v
+                pixelData[4*i+2] = v
+            }
+
+            contextb.putImageData(imageData,0,0,0,0,canvasb.width,canvasb.height)
+        }
+
+        //反色滤镜
+        function reverseEffect() {
+            let imageData = contexta.getImageData(0,0,canvasa.width,canvasa.height)
+            let  pixelData = imageData.data
+            for(let i=0;i<canvasb.width * canvasb.height;i++){
+                let r = pixelData[4*i+0]
+                let g = pixelData[4*i+0]
+                let b = pixelData[4*i+0]
+
+
+                pixelData[4*i+0] = 255 - r
+                pixelData[4*i+1] = 255 - g
+                pixelData[4*i+2] = 255 - b
+            }
+
+            contextb.putImageData(imageData,0,0,0,0,canvasb.width,canvasb.height)
+        }
+
+        function blurEffect(){
+            
+            let tmpImageData = contexta.getImageData( 0 , 0 , canvasa.width , canvasa.height )
+            let tmpPixelData = tmpImageData.data
+
+            let imageData = contexta.getImageData( 0 , 0 , canvasa.width , canvasa.height )
+            let pixelData = imageData.data
+
+            let blurR = 3
+            let totalnum = (2*blurR + 1)*(2*blurR + 1)
+
+            for( let i = blurR ; i < canvasb.height - blurR ; i ++ ){
+                for( let j = blurR ; j < canvasb.width - blurR ; j ++ ){
+
+                    let totalr = 0 , totalg = 0 , totalb = 0
+                    for( let dx = -blurR ; dx <= blurR ; dx ++ ){
+                        for( let dy = -blurR ; dy <= blurR ; dy ++ ){
+
+                            let x = i + dx
+                            let y = j + dy
+
+                            let p = x*canvasb.width + y
+                            totalr += tmpPixelData[p*4+0]
+                            totalg += tmpPixelData[p*4+1]
+                            totalb += tmpPixelData[p*4+2]
+                        }
+                    }
+
+                    let p = i*canvasb.width + j
+                    pixelData[p*4+0] = totalr / totalnum
+                    pixelData[p*4+1] = totalg / totalnum
+                    pixelData[p*4+2] = totalb / totalnum
+                }
+            }
+            contextb.putImageData( imageData , 0 , 0 , 0 , 0 , canvasb.width , canvasb.height )
+        }
+    
+        function mosaicEffect(){
+
+            let tmpImageData = contexta.getImageData( 0 , 0 , canvasa.width , canvasa.height )
+            let tmpPixelData = tmpImageData.data
+
+            let imageData = contexta.getImageData( 0 , 0 , canvasa.width , canvasa.height )
+            let pixelData = imageData.data
+
+            let size = 16
+            let totalnum = size*size
+            for( let i = 0 ; i < canvasb.height ; i += size ){
+                for( let j = 0 ; j < canvasb.width ; j += size ){
+
+                    let totalr = 0 , totalg = 0 , totalb = 0
+                    for( let dx = 0 ; dx < size ; dx ++ ){
+                        for( let dy = 0 ; dy < size ; dy ++ ){
+
+                            let x = i + dx
+                            let y = j + dy
+
+                            let p = x*canvasb.width + y
+                            totalr += tmpPixelData[p*4+0]
+                            totalg += tmpPixelData[p*4+1]
+                            totalb += tmpPixelData[p*4+2]
+                        }
+                    }
+                        
+
+                    let p = i*canvasb.width+j
+                    let resr = totalr / totalnum
+                    let resg = totalg / totalnum
+                    let resb = totalb / totalnum
+
+                    for( let dx = 0 ; dx < size ; dx ++ ){
+                        for( let dy = 0 ; dy < size ; dy ++ ){
+
+                            let x = i + dx
+                            let y = j + dy
+
+                            let p = x*canvasb.width + y
+                            pixelData[p*4+0] = resr
+                            pixelData[p*4+1] = resg
+                            pixelData[p*4+2] = resb
+                        }
+                    }      
+                }
+            }
+            contextb.putImageData( imageData , 0 , 0 , 0 , 0 , canvasb.width, canvasb.height )
+        }
+
+    </script>
+</body>
+</html>

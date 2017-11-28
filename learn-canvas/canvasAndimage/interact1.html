@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" style="display:block;border:1px solid #ccc;margin:50px auto;"></canvas>
+    <canvas id="offCanvas" style="display:none;"></canvas>
+    <script>
+        const canvas = document.getElementById("canvas")
+        let isDown = false
+        let scale 
+        canvas.width = 1024
+        canvas.height = 768
+        const context = canvas.getContext('2d')
+
+        const offCanvas = document.getElementById('offCanvas')
+        const offContext = offCanvas.getContext('2d')
+
+        const image = new Image()
+        image.src = './images/saber-l.jpg'
+        image.onload = function(){
+            offCanvas.width = image.width
+            offCanvas.height = image.height
+            scale = offCanvas.width / canvas.width
+            // context画的是large图片缩放后的图片(原始图片)
+            context.drawImage(image,0,0,canvas.width,canvas.height)
+            // offContext画的是大图
+            offContext.drawImage(image,0,0)
+        }
+        canvas.onmousedown = function(e){
+            e.preventDefault()
+            //用offsetX 代替clientX e.offsetX = e.clientX - canvas.getBoundingClientRect().left
+            let x = e.offsetX
+            let y = e.offsetY
+            isDown = true
+
+            drawCanvasWithMagnifier(true,x,y)
+        }
+
+        canvas.onmousemove = function(e){
+            e.preventDefault()
+            if(isDown === true){
+                let x = e.offsetX
+                let y = e.offsetY
+                drawCanvasWithMagnifier(true,x,y)
+            }
+        }
+
+        canvas.onmouseup = function(e){
+            e.preventDefault()
+            isDown = false
+            drawCanvasWithMagnifier(false)
+        }
+
+        canvas.onmouseout = function(e){
+            e.preventDefault()
+            isDown = false
+            drawCanvasWithMagnifier(false)
+        }
+
+        function drawCanvasWithMagnifier(isShowMagnifier,x,y){
+            context.clearRect(0,0,canvas.width,canvas.height)
+            context.drawImage(image,0,0,canvas.width,canvas.height)
+            if(isShowMagnifier === true){
+                drawMagnifier(x,y)
+            }
+        }
+
+        function drawMagnifier(x,y){
+            let imageL_x = x*scale
+            let imageL_y = y*scale
+
+            const mr = 200
+
+            let sx = imageL_x - mr
+            let sy = imageL_y - mr
+
+            let dx = x - mr
+            let dy = y - mr
+
+            context.save()
+            context.beginPath()
+            context.lineWidth = 10
+            context.strokeStyle = '#058'
+            context.arc(x,y,mr,0,Math.PI*2)
+            context.stroke()
+            context.clip()
+            context.drawImage(offCanvas,sx,sy,2*mr,2*mr,dx,dy,2*mr,2*mr)
+
+            context.restore()
+        }
+    </script>    
+</body>
+</html>
