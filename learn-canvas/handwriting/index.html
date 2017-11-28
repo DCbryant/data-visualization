@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #canvas{
+            display: block;
+            margin: 0 auto;
+            border:1px solid #eee;
+        }
+        #controller{
+            width: 800px;
+            margin: 0 auto;
+        }
+        #controller::after{
+            content: '';
+            display: block;
+            clear: both;
+        }
+        #clearBtn{
+            float: right;
+            margin: 10px 0 0 10px;
+            border:2px solid #aaa;
+            width: 80px;
+            height: 40px;
+            line-height: 40px;
+            font-size: 20px;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #fff;
+            font-weight: bold;
+            font-family: serif;
+        }
+        #clearBtn:hover{
+            background-color: #def;
+        }
+
+        .color-btn{
+            float: left;
+            margin: 10px 10px 0 0;
+            border: 5px solid #fff;
+            width: 40px;
+            height: 40px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .color-btn:hover{
+            border: 5px solid salmon;
+        }
+
+        .color-btn.color-btn-selected{
+            border: 5px solid aqua;
+        }
+
+        #black_btn{
+            background-color: #000;
+        }
+
+        #blue_btn{
+            background-color: blue;
+        }
+
+        #blue_btn{
+            background-color: blue;
+        }
+
+        #green_btn{
+            background-color: green;
+        }
+
+        #red_btn{
+            background-color: red;
+        }
+
+        #blue_btn{
+            background-color: blue;
+        }
+
+        #yellow_btn{
+            background-color: yellow;
+        }
+
+        #orange_btn{
+            background-color: orange;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="controller">
+        <div id="black_btn" class="color-btn color-btn-selected"></div>
+        <div id="blue_btn" class="color-btn"></div>
+        <div id="green_btn" class="color-btn"></div>
+        <div id="red_btn" class="color-btn"></div>
+        <div id="orange_btn" class="color-btn"></div>
+        <div id="yellow_btn" class="color-btn"></div>
+        <div id="clearBtn">清除</div>
+    </div>
+    <script>
+        const clientWidth = document.body.clientWidth
+        const canvas = document.getElementById('canvas')
+        const context = canvas.getContext('2d')
+        let isMouseDown = false
+        let strokeColor = '#000'
+        const colorBtns = document.querySelectorAll('.color-btn')
+        const clearBtn = document.getElementById('clearBtn')
+        const controller = document.getElementById('controller')
+        let lastX = 0
+        let lastY = 0
+        let lastTimeStamp = 0
+        let lastLineWidth = -1
+        canvas.width = canvas.height = Math.min(800,clientWidth)
+        controller.style.width = clientWidth + 'px'
+        drawGrid()
+
+        clearBtn.addEventListener('click',function(e){
+            context.clearRect(0,0,canvas.width,canvas.height)
+            drawGrid()
+        })
+
+        
+
+        Array.from(colorBtns).forEach(function(ele,index){
+            ele.addEventListener('click',function(e){
+                for (let i = 0; i < colorBtns.length; i++){
+                    colorBtns[i].classList.remove('color-btn-selected')
+                }
+                this.classList.add('color-btn-selected')
+                strokeColor = window.getComputedStyle(this,null).backgroundColor
+            })
+        })
+
+        canvas.onmousedown = function(e){
+            e.preventDefault()
+            beginStroke(e.offsetX,e.offsetY)
+        }
+
+        function beginStroke(x,y){
+            isMouseDown = true
+            lastX = x
+            lastY = y
+            lastTimeStamp = new Date().getTime()
+        }
+
+        function endStroke(){
+            isMouseDown = false
+        }
+
+        canvas.onmouseup = function(e){
+            e.preventDefault()
+            endStroke()
+        }
+
+        canvas.onmouseout = function(e){
+            e.preventDefault()
+            endStroke()
+        }
+
+        canvas.onmousemove = function(e){
+            e.preventDefault()
+            if(isMouseDown){
+                moveStroke(e.offsetX,e.offsetY)
+            }
+        }
+
+        canvas.addEventListener('touchstart',function(e){
+            e.preventDefault()
+            let touch = e.touches[0]
+            beginStroke(touch.pageX,touch.pageY)
+        })
+
+        canvas.addEventListener('touchmove',function(e){
+            e.preventDefault()
+            if(isMouseDown){
+                let touch = e.touches[0]
+                moveStroke(touch.pageX,touch.pageY)
+            }
+        })
+
+        canvas.addEventListener('touchend',function(e){
+            e.preventDefault()
+            endStroke()
+        })
+
+        function moveStroke(x,y){
+            let curX = x
+            let curY = y
+            let curTimeStamp = new Date().getTime()
+            let s = calcDis(lastX,lastY,curX,curY)
+            let t = curTimeStamp - lastTimeStamp
+            
+            let lineWidth = calcLineWidth(t,s)
+            // draw
+            context.beginPath()
+            context.moveTo(lastX,lastY)
+            context.lineTo(curX,curY)
+
+            context.strokeStyle = strokeColor
+            context.lineWidth = lineWidth
+            context.lineCap = 'round'
+            context.lineJoin = 'round'
+            context.stroke()
+
+            lastX = curX
+            lastY = curY
+            lastTimeStamp = curTimeStamp
+            lastLineWidth = lineWidth
+        }
+
+
+        function calcDis(x1,y1,x2,y2){
+            return Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2))
+        }
+
+        function calcLineWidth(t,s){
+            let v = s / t
+            let resultLineWidth
+            if(v <= 0.1){
+                resultLineWidth = 30
+            }else if(v >= 10){
+                resultLineWidth = 10
+            }else{
+                resultLineWidth = 30 - (v-0.1)/(10-0.1)*(30-1)
+            }
+
+            if(lastLineWidth == -1){
+                return resultLineWidth
+            }
+
+            return lastLineWidth*2/3 + resultLineWidth/3
+
+            
+        }
+
+
+        function drawGrid(){
+            context.save()
+
+            context.strokeStyle = 'rgb(230,11,9)'
+
+            context.beginPath()
+            context.moveTo(3,3)
+            context.lineTo(canvas.width - 3,3)
+            context.lineTo(canvas.width - 3,canvas.height - 3)
+            context.lineTo(3,canvas.height - 3)
+            context.closePath()
+            context.lineWidth = 6
+            context.stroke()
+
+            context.beginPath()
+            context.moveTo(0,0)
+            context.lineTo(canvas.width,canvas.height)
+
+            context.moveTo(canvas.width,0)
+            context.lineTo(0,canvas.height)
+
+            context.moveTo(canvas.width/2,0)
+            context.lineTo(canvas.width/2,canvas.height)
+
+            context.moveTo(0,canvas.height/2)
+            context.lineTo(canvas.width,canvas.height/2)
+
+            context.lineWidth = 1
+            context.stroke()
+
+            context.restore()
+        }
+    </script>
+</body>
+</html>
