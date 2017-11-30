@@ -24,7 +24,7 @@
 
         function drawStar(context,r,x,y,rot){
             context.save()
-
+            //必须将translate放在rotate前面，否则会与预想的不一样，跟图形学有关，矩阵右乘
             context.translate(x,y)
             context.rotate(rot / 180 * Math.PI)
             context.scale(r,r)
